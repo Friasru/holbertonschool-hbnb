@@ -12,8 +12,6 @@ HBnB Evolution is a simplified AirBnB-like web application.
 
 ## 0. High-Level Architecture
 
-![alt text](image-1.png)
-
 The app is divided into 3 layers
 
 - Presentation layer recieves requests from the user though the API
@@ -26,8 +24,6 @@ The layers communicate through the Facade Pattern meaning each layer only talks 
 
 ## 1. Business Logic Layer
 
-![alt text](image-2.png)
-
 This layer has 4 main classes
 
 - User - can register, update profile and be an admin
@@ -39,8 +35,6 @@ This layer has 4 main classes
 - Amenity - feature a place can offer, like a pool
 
 ## 2. API Interacion Flow
-
-![alt text](image-3.png)
 
 The 4 diagrams show what happens step by step when a user does something in the app. Every time it follows the same pattern.
 
