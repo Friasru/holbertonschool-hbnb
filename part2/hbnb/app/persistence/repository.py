@@ -22,10 +22,10 @@ class Repository(ABC):
         pass
 
     @abstractmethod
-    def get_by__attribute(self, attr_name, attr_value):
+    def get_by_attribute(self, attr_name, attr_value):
         pass
 
-class inMemoryRepository(Repository):
+class InMemoryRepository(Repository):
     def __init__(self):
         self._storage = {}
 
