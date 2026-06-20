@@ -41,7 +41,10 @@ class PlaceList(Resource):
     def post(self):
         """Register a new place"""
         place_data = api.payload
-        new_place = facade.create_place(place_data)
+        try:
+            new_place = facade.create_place(place_data)
+        except ValueError as e:
+            return {'error': str(e)}, 400
         if not new_place:
             return {'error': 'Invalid owner_id or amenity_id'}, 400
         return {
@@ -92,7 +95,10 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
-        updated_place = facade.update_place(place_id, place_data)
+        try:
+            updated_place = facade.update_place(place_id, place_data)
+        except ValueError as e:
+            return {'error': str(e)}, 400
         if not updated_place:
             return {'error': 'Place not found'}, 404
         return {'message': 'Place updated successfully'}, 200

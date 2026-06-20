@@ -18,7 +18,10 @@ class ReviewList(Resource):
     def post(self):
         """Register a new review"""
         review_data = api.payload
-        new_review = facade.create_review(review_data)
+        try:
+            new_review = facade.create_review(review_data)
+        except ValueError as e:
+            return {'error': str(e)}, 400
         if not new_review:
             return {'error': 'Invalid user_id or place_id'}, 400
         return {
@@ -59,7 +62,10 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """Update a review's information"""
         review_data = api.payload
-        updated_review = facade.update_review(review_id, review_data)
+        try:
+            updated_review = facade.update_review(review_id, review_data)
+        except ValueError as e:
+            return {'error': str(e)}, 400
         if not updated_review:
             return {'error': 'Review not found'}, 404
         return {'message': 'Review updated successfully'}, 200
