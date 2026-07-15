@@ -1,18 +1,25 @@
-from app.persistence.repository import InMemoryRepository
 from app.models.user import User
-from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
+from app.models.amenity import Amenity
+from app.persistence.repository import SQLAlchemyRepository
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.user_repo = SQLAlchemyRepository(User)
+        self.place_repo = SQLAlchemyRepository(Place)
+        self.review_repo = SQLAlchemyRepository(Review)
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
 
+    # User methods
     def create_user(self, user_data):
-        user = User(**user_data)
+        user = User(
+            first_name=user_data['first_name'],
+            last_name=user_data['last_name'],
+            email=user_data['email'],
+            password=user_data['password'],
+            is_admin=user_data.get('is_admin', False)
+        )
         self.user_repo.add(user)
         return user
 
@@ -32,6 +39,7 @@ class HBnBFacade:
         user.update(user_data)
         return user
 
+    # Amenity methods
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
@@ -50,6 +58,7 @@ class HBnBFacade:
         amenity.update(amenity_data)
         return amenity
 
+    # Place methods
     def create_place(self, place_data):
         owner = self.user_repo.get(place_data['owner_id'])
         if not owner:
@@ -85,6 +94,7 @@ class HBnBFacade:
         place.update(place_data)
         return place
 
+    # Review methods
     def create_review(self, review_data):
         user = self.user_repo.get(review_data['user_id'])
         if not user:
@@ -99,7 +109,6 @@ class HBnBFacade:
             user=user
         )
         self.review_repo.add(review)
-        place.add_review(review)
         return review
 
     def get_review(self, review_id):
