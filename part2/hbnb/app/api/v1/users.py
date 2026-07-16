@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
 
 api = Namespace('users', description='User operations')
@@ -18,13 +18,11 @@ class UserList(Resource):
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
     def post(self):
-        """Register a new user"""
+        """Register a new user (public)"""
         user_data = api.payload
-
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
-
         try:
             new_user = facade.create_user(user_data)
         except ValueError as e:
@@ -38,7 +36,7 @@ class UserList(Resource):
 
     @api.response(200, 'List of users retrieved successfully')
     def get(self):
-        """Retrieve a list of all users"""
+        """Retrieve a list of all users (public)"""
         users = facade.get_all_users()
         return [{'id': u.id, 'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email} for u in users], 200
 
@@ -47,7 +45,7 @@ class UserResource(Resource):
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
-        """Get user details by ID"""
+        """Get user details by ID (public)"""
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
@@ -62,19 +60,29 @@ class UserResource(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User successfully updated')
     @api.response(403, 'Unauthorized action')
-    @api.response(400, 'You cannot modify email or password')
+    @api.response(400, 'Invalid input data')
     @api.response(404, 'User not found')
     def put(self, user_id):
-        """Update user details (only own data, no email or password changes)"""
+        """Update user details"""
+        claims = get_jwt()
         current_user = get_jwt_identity()
-
-        if current_user != user_id:
-            return {'error': 'Unauthorized action'}, 403
+        is_admin = claims.get('is_admin', False)
 
         user_data = api.payload
 
-        if 'email' in user_data or 'password' in user_data:
-            return {'error': 'You cannot modify email or password'}, 400
+        if is_admin:
+            # Admin can modify anything including email and password
+            email = user_data.get('email')
+            if email:
+                existing_user = facade.get_user_by_email(email)
+                if existing_user and existing_user.id != user_id:
+                    return {'error': 'Email already in use'}, 400
+        else:
+            # Regular user can only modify their own data
+            if current_user != user_id:
+                return {'error': 'Unauthorized action'}, 403
+            if 'email' in user_data or 'password' in user_data:
+                return {'error': 'You cannot modify email or password'}, 400
 
         try:
             updated_user = facade.update_user(user_id, user_data)
