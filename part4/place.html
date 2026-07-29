@@ -12,7 +12,7 @@
         <a href="index.html" class="logo">
             <span>🏠</span> HBNB
         </a>
-        <button class="login-button" id="authBtn" onclick="handleAuthAction()">Login</button>
+        <button class="login-button" id="authBtn">Login</button>
     </header>
 
     <nav>
@@ -41,74 +41,8 @@
         <p>&copy; 2024 HBNB. All rights reserved.</p>
     </footer>
 
+    <script src="scripts.js"></script>
     <script>
-        // Sample place data
-        const placesData = {
-            1: {
-                id: 1,
-                name: "Cozy Apartment",
-                price: 100,
-                host: "John Doe",
-                description: "A comfortable and well-furnished apartment located in the heart of the city. Perfect for couples or solo travelers.",
-                amenities: ["WiFi", "Air Conditioning", "Kitchen", "Parking"],
-                reviews: [
-                    {
-                        id: 1,
-                        user: "Alice Johnson",
-                        rating: 5,
-                        comment: "Excellent place! Clean and comfortable."
-                    },
-                    {
-                        id: 2,
-                        user: "Bob Smith",
-                        rating: 4,
-                        comment: "Nice apartment, good location."
-                    }
-                ]
-            },
-            2: {
-                id: 2,
-                name: "Modern Studio",
-                price: 85,
-                host: "Jane Smith",
-                description: "A stylish studio apartment with modern amenities and great views.",
-                amenities: ["WiFi", "TV", "Heating", "Washer"],
-                reviews: [
-                    {
-                        id: 3,
-                        user: "Charlie Brown",
-                        rating: 5,
-                        comment: "Very modern and clean!"
-                    }
-                ]
-            },
-            3: {
-                id: 3,
-                name: "Spacious House",
-                price: 150,
-                host: "Michael Johnson",
-                description: "A spacious family house with multiple bedrooms and a garden.",
-                amenities: ["WiFi", "Garden", "Garage", "Kitchen", "Heating"],
-                reviews: []
-            },
-            4: {
-                id: 4,
-                name: "Beach Villa",
-                price: 200,
-                host: "Emma Wilson",
-                description: "Luxurious villa with direct beach access and stunning ocean views.",
-                amenities: ["WiFi", "Pool", "Patio", "Kitchen", "Air Conditioning", "Parking"],
-                reviews: [
-                    {
-                        id: 4,
-                        user: "David Lee",
-                        rating: 5,
-                        comment: "Amazing place with beautiful views!"
-                    }
-                ]
-            }
-        };
-
         function getPlaceIdFromURL() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id') || 1;
@@ -171,9 +105,8 @@
 
         function loadAddReviewForm(place) {
             const container = document.getElementById('addReviewContainer');
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-            if (isLoggedIn) {
+            if (isUserLoggedIn()) {
                 container.innerHTML = `
                     <form class="add-review" onsubmit="handleAddReview(event, ${place.id})">
                         <fieldset>
@@ -212,27 +145,6 @@
 
             alert('Review submitted successfully!');
             location.reload();
-        }
-
-        function handleAuthAction() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            if (isLoggedIn) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userEmail');
-                document.getElementById('authBtn').textContent = 'Login';
-                location.reload();
-            } else {
-                window.location.href = 'login.html';
-            }
-        }
-
-        function updateAuthButton() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const authBtn = document.getElementById('authBtn');
-            if (isLoggedIn) {
-                authBtn.textContent = 'Logout';
-                authBtn.classList.add('logout');
-            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {

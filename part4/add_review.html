@@ -12,7 +12,7 @@
         <a href="index.html" class="logo">
             <span>🏠</span> HBNB
         </a>
-        <button class="login-button" id="authBtn" onclick="handleAuthAction()">Login</button>
+        <button class="login-button" id="authBtn">Login</button>
     </header>
 
     <nav>
@@ -30,6 +30,7 @@
         <p>&copy; 2024 HBNB. All rights reserved.</p>
     </footer>
 
+    <script src="scripts.js"></script>
     <script>
         function getPlaceIdFromURL() {
             const params = new URLSearchParams(window.location.search);
@@ -37,10 +38,9 @@
         }
 
         function checkLoginStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             const container = document.getElementById('formContainer');
 
-            if (!isLoggedIn) {
+            if (!isUserLoggedIn()) {
                 container.innerHTML = '<p style="text-align: center; margin-top: 50px;">You must be <a href="login.html">logged in</a> to add a review.</p>';
                 return false;
             }
@@ -92,27 +92,6 @@
 
             alert('Review submitted successfully!');
             window.location.href = `place.html?id=${placeId}`;
-        }
-
-        function handleAuthAction() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            if (isLoggedIn) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userEmail');
-                document.getElementById('authBtn').textContent = 'Login';
-                location.reload();
-            } else {
-                window.location.href = 'login.html';
-            }
-        }
-
-        function updateAuthButton() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const authBtn = document.getElementById('authBtn');
-            if (isLoggedIn) {
-                authBtn.textContent = 'Logout';
-                authBtn.classList.add('logout');
-            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {

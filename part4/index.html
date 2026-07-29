@@ -12,7 +12,7 @@
         <a href="index.html" class="logo">
             <span>🏠</span> HBNB
         </a>
-        <button class="login-button" onclick="redirectToLogin()">Login</button>
+        <button class="login-button" id="authBtn">Login</button>
     </header>
 
     <nav>
@@ -33,35 +33,8 @@
         <p>&copy; 2024 HBNB. All rights reserved.</p>
     </footer>
 
+    <script src="scripts.js"></script>
     <script>
-        // Sample data - Replace with API calls in production
-        const places = [
-            {
-                id: 1,
-                name: "Cozy Apartment",
-                price: 100,
-                image: "apt1.jpg"
-            },
-            {
-                id: 2,
-                name: "Modern Studio",
-                price: 85,
-                image: "apt2.jpg"
-            },
-            {
-                id: 3,
-                name: "Spacious House",
-                price: 150,
-                image: "apt3.jpg"
-            },
-            {
-                id: 4,
-                name: "Beach Villa",
-                price: 200,
-                image: "apt4.jpg"
-            }
-        ];
-
         function loadPlaces() {
             const placesList = document.getElementById('placesList');
             placesList.innerHTML = '';
@@ -81,12 +54,10 @@
             });
         }
 
-        function redirectToLogin() {
-            window.location.href = 'login.html';
-        }
-
-        // Load places when page loads
-        document.addEventListener('DOMContentLoaded', loadPlaces);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPlaces();
+            updateAuthButton();
+        });
     </script>
 </body>
 </html>
