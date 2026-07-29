@@ -49,3 +49,9 @@ The 4 diagrams show what happens step by step when a user does something in the 
 
 ##### Authors
 - Alberto Frias Ruiz - Cohort 29
+
+# Run commands
+Terminal A
+- ...part2/hbnb - python run.py
+Terminal B
+- ...part4 - python -m http.server 8000
