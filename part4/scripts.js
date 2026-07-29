@@ -38,7 +38,6 @@ async function loginUser(email, password) {
 
         if (response.ok) {
             const data = await response.json();
-            // Store the JWT token in a cookie
             setCookie('token', data.access_token, 7);
             return { success: true, data };
         } else {
@@ -75,7 +74,6 @@ function setupLoginForm() {
             const password = document.getElementById('password').value;
             const errorContainer = document.getElementById('error-message');
 
-            // Clear previous error messages
             if (errorContainer) {
                 errorContainer.style.display = 'none';
                 errorContainer.textContent = '';
@@ -84,10 +82,8 @@ function setupLoginForm() {
             const result = await loginUser(email, password);
 
             if (result.success) {
-                // Redirect to main page
                 window.location.href = 'index.html';
             } else {
-                // Display error message
                 if (errorContainer) {
                     errorContainer.style.display = 'block';
                     errorContainer.textContent = result.error;
@@ -99,23 +95,18 @@ function setupLoginForm() {
     }
 }
 
-// ===== Update Auth Button =====
-function updateAuthButton() {
-    const authBtn = document.getElementById('authBtn');
-    if (!authBtn) return;
-
+// ===== Update Auth UI =====
+function updateAuthUI() {
     const isLoggedIn = isUserLoggedIn();
+    const loginLink = document.getElementById('login-link');
+    const logoutButton = document.getElementById('logout-button');
 
     if (isLoggedIn) {
-        authBtn.textContent = 'Logout';
-        authBtn.classList.add('logout');
-        authBtn.onclick = handleLogout;
+        if (loginLink) loginLink.style.display = 'none';
+        if (logoutButton) logoutButton.style.display = '';
     } else {
-        authBtn.textContent = 'Login';
-        authBtn.classList.remove('logout');
-        authBtn.onclick = () => {
-            window.location.href = 'login.html';
-        };
+        if (loginLink) loginLink.style.display = '';
+        if (logoutButton) logoutButton.style.display = 'none';
     }
 }
 
@@ -203,7 +194,6 @@ function displayPlaces(places) {
         article.classList.add('place-card');
         article.id = `place-${place.id}`;
         
-        // Get price from place data if available
         const price = place.price || 'N/A';
         
         article.innerHTML = `
@@ -242,21 +232,6 @@ function filterPlacesByPrice(maxPrice) {
             card.style.display = 'none';
         }
     });
-}
-
-// ===== Authentication Check and UI Update =====
-function checkAuthenticationAndDisplay() {
-    const isLoggedIn = isUserLoggedIn();
-    const loginNav = document.getElementById('login-nav');
-    
-    // Show/hide login link based on authentication
-    if (loginNav) {
-        if (isLoggedIn) {
-            loginNav.style.display = 'none';
-        } else {
-            loginNav.style.display = '';
-        }
-    }
 }
 
 // ===== Sample Data Fallback =====
@@ -327,36 +302,22 @@ const placesData = {
 };
 
 const places = [
-    {
-        id: 1,
-        name: "Cozy Apartment",
-        price: 100,
-        image: "apt1.jpg"
-    },
-    {
-        id: 2,
-        name: "Modern Studio",
-        price: 85,
-        image: "apt2.jpg"
-    },
-    {
-        id: 3,
-        name: "Spacious House",
-        price: 150,
-        image: "apt3.jpg"
-    },
-    {
-        id: 4,
-        name: "Beach Villa",
-        price: 200,
-        image: "apt4.jpg"
-    }
+    { id: 1, name: "Cozy Apartment", price: 100, image: "apt1.jpg" },
+    { id: 2, name: "Modern Studio", price: 85, image: "apt2.jpg" },
+    { id: 3, name: "Spacious House", price: 150, image: "apt3.jpg" },
+    { id: 4, name: "Beach Villa", price: 200, image: "apt4.jpg" }
 ];
 
 // ===== Initialize on DOMContentLoaded =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     setupLoginForm();
-    updateAuthButton();
-    checkAuthenticationAndDisplay();
+    updateAuthUI();
     setupPriceFilter();
+    
+    // Try to fetch from API, fallback to sample data
+    const placesLoaded = await fetchPlaces();
+    if (!placesLoaded) {
+        console.log('Using fallback data');
+        displayPlaces(places);
+    }
 });

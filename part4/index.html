@@ -3,41 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBNB - List of Places</title>
-    <link rel="stylesheet" href="style.css">
+    <title>List of Places</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo">
-            <span>🏠</span> HBNB
-        </a>
-        <button class="login-button" id="authBtn">Login</button>
+        <nav>
+            <a href="index.html" class="logo">
+                <span>🏠</span> HBNB
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="login.html" id="login-link">Login</a>
+                <button class="logout-button" id="logout-button" style="display: none;" onclick="handleLogout()">Logout</button>
+            </div>
+        </nav>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li id="login-nav"><a href="login.html">Login</a></li>
-        </ul>
-    </nav>
-
     <main>
-        <section class="filter-section">
-            <h1>Available Places</h1>
-            <div class="filter-controls">
-                <label for="price-filter">Filter by Price:</label>
-                <select id="price-filter">
-                    <option value="0">All Prices</option>
-                    <option value="10">Up to $10</option>
-                    <option value="50">Up to $50</option>
-                    <option value="100">Up to $100</option>
-                </select>
-            </div>
+        <h1>Available Places</h1>
+        
+        <section id="filter">
+            <label for="price-filter">Max Price:</label>
+            <select id="price-filter">
+                <option value="0">All Prices</option>
+                <option value="10">Up to $10</option>
+                <option value="50">Up to $50</option>
+                <option value="100">Up to $100</option>
+            </select>
         </section>
 
-        <section class="places-container" id="places-list">
-            <!-- Places will be dynamically loaded here -->
+        <section id="places-list">
+            <!-- List of places will be populated dynamically -->
         </section>
     </main>
 
@@ -46,19 +44,5 @@
     </footer>
 
     <script src="scripts.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const placesLoaded = await fetchPlaces();
-            
-            if (!placesLoaded) {
-                console.log('Using fallback data');
-                displayPlaces(places);
-            }
-            
-            updateAuthButton();
-            checkAuthenticationAndDisplay();
-            setupPriceFilter();
-        });
-    </script>
 </body>
 </html>
