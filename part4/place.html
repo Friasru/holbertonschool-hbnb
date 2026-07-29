@@ -3,37 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBNB - Place Details</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Place Details</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo">
-            <span>🏠</span> HBNB
-        </a>
-        <button class="login-button" id="authBtn">Login</button>
+        <nav>
+            <a href="index.html" class="logo">
+                <span>🏠</span> HBNB
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="login.html" id="login-link">Login</a>
+                <button class="logout-button" id="logout-button" style="display: none;" onclick="handleLogout()">Logout</button>
+            </div>
+        </nav>
     </header>
 
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="login.html">Login</a></li>
-        </ul>
-    </nav>
-
     <main>
-        <article class="place-details" id="placeDetails">
-            <!-- Place details will be loaded dynamically -->
-        </article>
+        <section id="place-details">
+            <!-- Place details will be populated dynamically -->
+        </section>
 
-        <section class="reviews-section">
+        <section id="reviews-section">
             <h2>Reviews</h2>
-            <div id="reviewsContainer">
-                <!-- Reviews will be loaded dynamically -->
+            <div id="reviews-list">
+                <!-- Reviews will be populated dynamically -->
             </div>
+        </section>
 
-            <div id="addReviewContainer"></div>
+        <section id="add-review" style="display: none;">
+            <form id="review-form">
+                <fieldset>
+                    <legend>Add Your Review</legend>
+
+                    <div>
+                        <label for="rating">Rating</label>
+                        <select id="rating" name="rating" required>
+                            <option value="">Select a rating</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="comment">Your Review</label>
+                        <textarea id="comment" name="comment" placeholder="Share your experience with this place..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Review</button>
+                </fieldset>
+            </form>
         </section>
     </main>
 
@@ -42,115 +66,6 @@
     </footer>
 
     <script src="scripts.js"></script>
-    <script>
-        function getPlaceIdFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('id') || 1;
-        }
-
-        function loadPlaceDetails() {
-            const placeId = getPlaceIdFromURL();
-            const place = placesData[placeId];
-
-            if (!place) {
-                document.getElementById('placeDetails').innerHTML = '<p>Place not found.</p>';
-                return;
-            }
-
-            const detailsHTML = `
-                <h1>${place.name}</h1>
-                <section class="place-info">
-                    <article class="place-info-item">
-                        <h3>Price</h3>
-                        <p>$${place.price} per night</p>
-                    </article>
-                    <article class="place-info-item">
-                        <h3>Host</h3>
-                        <p>${place.host}</p>
-                    </article>
-                </section>
-                <section class="place-info-item">
-                    <h3>Description</h3>
-                    <p>${place.description}</p>
-                </section>
-                <section class="place-info-item">
-                    <h3>Amenities</h3>
-                    <ul>
-                        ${place.amenities.map(amenity => `<li>${amenity}</li>`).join('')}
-                    </ul>
-                </section>
-            `;
-
-            document.getElementById('placeDetails').innerHTML = detailsHTML;
-            loadReviews(place);
-        }
-
-        function loadReviews(place) {
-            const reviewsContainer = document.getElementById('reviewsContainer');
-
-            if (place.reviews.length === 0) {
-                reviewsContainer.innerHTML = '<p class="no-reviews">No reviews yet. Be the first to review!</p>';
-            } else {
-                reviewsContainer.innerHTML = place.reviews.map(review => `
-                    <article class="review-card">
-                        <div class="rating">★ ${review.rating}/5</div>
-                        <div class="user-name">${review.user}</div>
-                        <div class="comment">${review.comment}</div>
-                    </article>
-                `).join('');
-            }
-
-            loadAddReviewForm(place);
-        }
-
-        function loadAddReviewForm(place) {
-            const container = document.getElementById('addReviewContainer');
-
-            if (isUserLoggedIn()) {
-                container.innerHTML = `
-                    <form class="add-review" onsubmit="handleAddReview(event, ${place.id})">
-                        <fieldset>
-                            <legend>Add Your Review</legend>
-
-                            <div>
-                                <label for="rating">Rating</label>
-                                <select id="rating" name="rating" required>
-                                    <option value="">Select a rating</option>
-                                    <option value="1">1 Star</option>
-                                    <option value="2">2 Stars</option>
-                                    <option value="3">3 Stars</option>
-                                    <option value="4">4 Stars</option>
-                                    <option value="5">5 Stars</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label for="comment">Your Review</label>
-                                <textarea id="comment" name="comment" required></textarea>
-                            </div>
-
-                            <button type="submit" class="submit-btn">Submit Review</button>
-                        </fieldset>
-                    </form>
-                `;
-            } else {
-                container.innerHTML = '<p style="text-align: center; margin-top: 20px;"><a href="login.html">Login</a> to add a review.</p>';
-            }
-        }
-
-        function handleAddReview(event, placeId) {
-            event.preventDefault();
-            const rating = document.getElementById('rating').value;
-            const comment = document.getElementById('comment').value;
-
-            alert('Review submitted successfully!');
-            location.reload();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPlaceDetails();
-            updateAuthButton();
-        });
-    </script>
+    <script src="place_details.js"></script>
 </body>
 </html>
