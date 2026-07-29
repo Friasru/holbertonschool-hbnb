@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBNB - List of Places</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png" type="image/png">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <span>🏠</span> HBNB
+        </a>
+        <button class="login-button" onclick="redirectToLogin()">Login</button>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Available Places</h1>
+        <section class="places-container" id="placesList">
+            <!-- Places will be dynamically loaded here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 HBNB. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample data - Replace with API calls in production
+        const places = [
+            {
+                id: 1,
+                name: "Cozy Apartment",
+                price: 100,
+                image: "apt1.jpg"
+            },
+            {
+                id: 2,
+                name: "Modern Studio",
+                price: 85,
+                image: "apt2.jpg"
+            },
+            {
+                id: 3,
+                name: "Spacious House",
+                price: 150,
+                image: "apt3.jpg"
+            },
+            {
+                id: 4,
+                name: "Beach Villa",
+                price: 200,
+                image: "apt4.jpg"
+            }
+        ];
+
+        function loadPlaces() {
+            const placesList = document.getElementById('placesList');
+            placesList.innerHTML = '';
+
+            places.forEach(place => {
+                const article = document.createElement('article');
+                article.classList.add('place-card');
+                article.innerHTML = `
+                    <h3>${place.name}</h3>
+                    <div class="price">
+                        <span class="price-label">$ ${place.price}</span>
+                        <span> per night</span>
+                    </div>
+                    <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+                `;
+                placesList.appendChild(article);
+            });
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Load places when page loads
+        document.addEventListener('DOMContentLoaded', loadPlaces);
+    </script>
+</body>
+</html>

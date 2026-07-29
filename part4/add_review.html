@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBNB - Add Review</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png" type="image/png">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <span>🏠</span> HBNB
+        </a>
+        <button class="login-button" id="authBtn" onclick="handleAuthAction()">Login</button>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="formContainer"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 HBNB. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function getPlaceIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('placeId') || 1;
+        }
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const container = document.getElementById('formContainer');
+
+            if (!isLoggedIn) {
+                container.innerHTML = '<p style="text-align: center; margin-top: 50px;">You must be <a href="login.html">logged in</a> to add a review.</p>';
+                return false;
+            }
+
+            loadAddReviewForm();
+            return true;
+        }
+
+        function loadAddReviewForm() {
+            const placeId = getPlaceIdFromURL();
+            const container = document.getElementById('formContainer');
+
+            container.innerHTML = `
+                <form class="add-review" onsubmit="handleAddReview(event)">
+                    <fieldset>
+                        <legend>Add Your Review</legend>
+
+                        <div>
+                            <label for="rating">Rating</label>
+                            <select id="rating" name="rating" required>
+                                <option value="">Select a rating</option>
+                                <option value="1">1 Star</option>
+                                <option value="2">2 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="5">5 Stars</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="comment">Your Review</label>
+                            <textarea id="comment" name="comment" placeholder="Share your experience with this place..." required></textarea>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="submit-btn">Submit Review</button>
+                            <a href="place.html?id=${placeId}" style="margin-left: 10px; color: #3498db;">Cancel</a>
+                        </div>
+                    </fieldset>
+                </form>
+            `;
+        }
+
+        function handleAddReview(event) {
+            event.preventDefault();
+            const rating = document.getElementById('rating').value;
+            const comment = document.getElementById('comment').value;
+            const placeId = getPlaceIdFromURL();
+
+            alert('Review submitted successfully!');
+            window.location.href = `place.html?id=${placeId}`;
+        }
+
+        function handleAuthAction() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userEmail');
+                document.getElementById('authBtn').textContent = 'Login';
+                location.reload();
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function updateAuthButton() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const authBtn = document.getElementById('authBtn');
+            if (isLoggedIn) {
+                authBtn.textContent = 'Logout';
+                authBtn.classList.add('logout');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            updateAuthButton();
+        });
+    </script>
+</body>
+</html>

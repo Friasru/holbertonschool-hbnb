@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBNB - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png" type="image/png">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <span>🏠</span> HBNB
+        </a>
+        <button class="login-button" onclick="redirectToHome()">Back to Home</button>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="login-container">
+            <form class="form" onsubmit="handleLogin(event)">
+                <fieldset>
+                    <legend>User Login</legend>
+
+                    <div>
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Login</button>
+                </fieldset>
+            </form>
+
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="#" style="color: #3498db;">Sign up here</a>
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 HBNB. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Store in localStorage for demo purposes
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('isLoggedIn', 'true');
+
+            alert('Login successful!');
+            window.location.href = 'index.html';
+        }
+
+        function redirectToHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
