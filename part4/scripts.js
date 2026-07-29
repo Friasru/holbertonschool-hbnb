@@ -1,4 +1,4 @@
-// API Configuration
+// ===== API Configuration =====
 const API_BASE_URL = 'http://localhost:5000/api/v1';
 
 // ===== Cookie Management =====
@@ -141,6 +141,124 @@ async function fetchWithAuth(url, options = {}) {
     });
 }
 
+// ===== Places Fetching and Display =====
+let allPlaces = [];
+
+async function fetchPlaces() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/places/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            allPlaces = data;
+            displayPlaces(allPlaces);
+            return true;
+        } else {
+            console.error('Failed to fetch places');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        return false;
+    }
+}
+
+async function fetchPlaceDetails(placeId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/places/${placeId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+        return null;
+    } catch (error) {
+        console.error('Error fetching place details:', error);
+        return null;
+    }
+}
+
+function displayPlaces(places) {
+    const placesList = document.getElementById('places-list');
+    if (!placesList) return;
+
+    placesList.innerHTML = '';
+
+    if (places.length === 0) {
+        placesList.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">No places found.</p>';
+        return;
+    }
+
+    places.forEach(place => {
+        const article = document.createElement('article');
+        article.classList.add('place-card');
+        article.id = `place-${place.id}`;
+        
+        // Get price from place data if available
+        const price = place.price || 'N/A';
+        
+        article.innerHTML = `
+            <h3>${place.title || place.name || 'Untitled'}</h3>
+            <div class="price">
+                <span class="price-label">$ ${price}</span>
+                <span> per night</span>
+            </div>
+            <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+        `;
+        placesList.appendChild(article);
+    });
+}
+
+// ===== Price Filtering =====
+function setupPriceFilter() {
+    const priceFilter = document.getElementById('price-filter');
+    if (!priceFilter) return;
+
+    priceFilter.addEventListener('change', (event) => {
+        const selectedPrice = parseInt(event.target.value);
+        filterPlacesByPrice(selectedPrice);
+    });
+}
+
+function filterPlacesByPrice(maxPrice) {
+    const placeCards = document.querySelectorAll('.place-card');
+
+    placeCards.forEach(card => {
+        const priceText = card.querySelector('.price-label').textContent;
+        const price = parseInt(priceText.replace('$ ', ''));
+
+        if (maxPrice === 0 || price <= maxPrice) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// ===== Authentication Check and UI Update =====
+function checkAuthenticationAndDisplay() {
+    const isLoggedIn = isUserLoggedIn();
+    const loginNav = document.getElementById('login-nav');
+    
+    // Show/hide login link based on authentication
+    if (loginNav) {
+        if (isLoggedIn) {
+            loginNav.style.display = 'none';
+        } else {
+            loginNav.style.display = '';
+        }
+    }
+}
+
 // ===== Sample Data Fallback =====
 const placesData = {
     1: {
@@ -239,4 +357,6 @@ const places = [
 document.addEventListener('DOMContentLoaded', () => {
     setupLoginForm();
     updateAuthButton();
+    checkAuthenticationAndDisplay();
+    setupPriceFilter();
 });

@@ -18,13 +18,25 @@
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="login.html">Login</a></li>
+            <li id="login-nav"><a href="login.html">Login</a></li>
         </ul>
     </nav>
 
     <main>
-        <h1>Available Places</h1>
-        <section class="places-container" id="placesList">
+        <section class="filter-section">
+            <h1>Available Places</h1>
+            <div class="filter-controls">
+                <label for="price-filter">Filter by Price:</label>
+                <select id="price-filter">
+                    <option value="0">All Prices</option>
+                    <option value="10">Up to $10</option>
+                    <option value="50">Up to $50</option>
+                    <option value="100">Up to $100</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="places-container" id="places-list">
             <!-- Places will be dynamically loaded here -->
         </section>
     </main>
@@ -35,28 +47,17 @@
 
     <script src="scripts.js"></script>
     <script>
-        function loadPlaces() {
-            const placesList = document.getElementById('placesList');
-            placesList.innerHTML = '';
-
-            places.forEach(place => {
-                const article = document.createElement('article');
-                article.classList.add('place-card');
-                article.innerHTML = `
-                    <h3>${place.name}</h3>
-                    <div class="price">
-                        <span class="price-label">$ ${place.price}</span>
-                        <span> per night</span>
-                    </div>
-                    <a href="place.html?id=${place.id}" class="details-button">View Details</a>
-                `;
-                placesList.appendChild(article);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPlaces();
+        document.addEventListener('DOMContentLoaded', async () => {
+            const placesLoaded = await fetchPlaces();
+            
+            if (!placesLoaded) {
+                console.log('Using fallback data');
+                displayPlaces(places);
+            }
+            
             updateAuthButton();
+            checkAuthenticationAndDisplay();
+            setupPriceFilter();
         });
     </script>
 </body>
