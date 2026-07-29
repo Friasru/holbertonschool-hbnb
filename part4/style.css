@@ -1,110 +1,76 @@
-/* ===== Place Details Section (Additional Styles) ===== */
-article.place-details {
-    margin-bottom: 30px;
-}
-
-article.place-details h1 {
-    font-size: 28px;
-    margin-bottom: 30px;
-    color: #2c3e50;
-}
-
-/* ===== Review Form Styling ===== */
-#add-review {
-    background-color: white;
-    margin: 30px 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+/* ===== Review Container ===== */
+.review-container {
     max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 50px auto;
+    padding: 20px;
 }
 
-#review-form {
+.review-container h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* ===== Form Actions ===== */
+.form-actions {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-#review-form fieldset {
-    border: none;
-    padding: 0;
-    margin: 0;
-}
-
-#review-form legend {
-    font-size: 20px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 15px;
-}
-
-#review-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-#review-form input,
-#review-form select,
-#review-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #bdc3c7;
-    border-radius: 5px;
-    font-family: inherit;
-    font-size: 16px;
-    color: #333;
-}
-
-#review-form input:focus,
-#review-form select:focus,
-#review-form textarea:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-}
-
-#review-form textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-#review-form button[type="submit"] {
-    background-color: #27ae60;
+.cancel-link {
+    background-color: #95a5a6;
     color: white;
     padding: 12px 20px;
-    border: none;
     border-radius: 5px;
-    cursor: pointer;
+    text-decoration: none;
     font-size: 16px;
-    font-weight: bold;
     transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
 }
 
-#review-form button[type="submit"]:hover {
-    background-color: #229954;
+.cancel-link:hover {
+    background-color: #7f8c8d;
+    color: white;
 }
 
-/* ===== Reviews Section Container ===== */
-#reviews-section {
-    margin: 40px 20px;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#reviews-section h2 {
-    color: #2c3e50;
-    font-size: 24px;
+/* ===== Success/Error Messages ===== */
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 5px;
     margin-bottom: 20px;
+    border: 1px solid #c3e6cb;
+    display: none;
 }
 
-#reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    display: none;
+}
+
+/* ===== Responsive Review Form ===== */
+@media (max-width: 768px) {
+    .review-container {
+        margin: 30px 10px;
+        padding: 15px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .cancel-link,
+    .submit-btn {
+        width: 100%;
+        text-align: center;
+    }
 }
